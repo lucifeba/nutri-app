@@ -21,10 +21,10 @@ type FormInputs = {
 }
 
 const steps = [
-    { id: 1, title: "Personal Data", icon: User },
-    { id: 2, title: "Physical Stats", icon: Activity },
-    { id: 3, title: "Nutrition", icon: Utensils },
-    { id: 4, title: "Health & Goals", icon: HeartPulse },
+    { id: 1, title: "Datos Personales", icon: User },
+    { id: 2, title: "Físico", icon: Activity },
+    { id: 3, title: "Nutrición", icon: Utensils },
+    { id: 4, title: "Salud y Metas", icon: HeartPulse },
 ]
 
 export default function AnamnesisWizard() {
@@ -34,21 +34,21 @@ export default function AnamnesisWizard() {
 
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
         setIsSubmitting(true)
-        // Simulate API call and Excel generation
-        console.log("Submitting data:", data)
+        console.log("Enviando datos:", data)
 
         // Create Excel
         const worksheet = XLSX.utils.json_to_sheet([data])
         const workbook = XLSX.utils.book_new()
         XLSX.utils.book_append_sheet(workbook, worksheet, "Anamnesis")
-        // In a real app, send this blob to the backend or Trigger download
-        // XLSX.writeFile(workbook, "anamnesis_data.xlsx") 
 
-        // TODO: Send to backend
+        // Trigger download (simulation of sending)
+        // XLSX.writeFile(workbook, `Anamnesis_${data.fullName}.xlsx`) 
+
         setTimeout(() => {
             setIsSubmitting(false)
-            alert("¡Listo! Cuestionario enviado. Revisa tu correo pronto.")
-        }, 2000)
+            window.open(`https://wa.me/34676002647?text=¡Listo! Ya te he enviado el cuestionario (Soy ${data.fullName}).`, '_blank')
+            alert("¡Listo! Cuestionario completo. Se ha abierto WhatsApp para avisar.")
+        }, 1500)
     }
 
     const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, steps.length))
@@ -93,16 +93,16 @@ export default function AnamnesisWizard() {
                             className="space-y-4"
                         >
                             <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">
-                                Let's get to know you
+                                Empecemos por ti
                             </h2>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Full Name</label>
+                                <label className="block text-sm font-medium mb-1">Nombre Completo</label>
                                 <input
                                     {...register("fullName", { required: true })}
                                     className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary transition-all"
-                                    placeholder="Juan Pérez"
+                                    placeholder="Ej: Juan Pérez"
                                 />
-                                {errors.fullName && <span className="text-destructive text-sm">Required</span>}
+                                {errors.fullName && <span className="text-destructive text-sm">Campo requerido</span>}
                             </div>
                         </motion.div>
                     )}
@@ -115,18 +115,18 @@ export default function AnamnesisWizard() {
                             exit={{ opacity: 0, x: -20 }}
                             className="space-y-4"
                         >
-                            <h2 className="text-2xl font-bold">Physical Stats</h2>
+                            <h2 className="text-2xl font-bold">Datos Físicos</h2>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Age</label>
+                                    <label className="block text-sm font-medium mb-1">Edad</label>
                                     <input type="number" {...register("age", { required: true })} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Weight (kg)</label>
+                                    <label className="block text-sm font-medium mb-1">Peso (kg)</label>
                                     <input type="number" step="0.1" {...register("weight", { required: true })} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Height (cm)</label>
+                                    <label className="block text-sm font-medium mb-1">Altura (cm)</label>
                                     <input type="number" {...register("height", { required: true })} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" />
                                 </div>
                             </div>
@@ -141,14 +141,14 @@ export default function AnamnesisWizard() {
                             exit={{ opacity: 0, x: -20 }}
                             className="space-y-4"
                         >
-                            <h2 className="text-2xl font-bold">Nutritional Habits</h2>
+                            <h2 className="text-2xl font-bold">Hábitos Nutricionales</h2>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Favorite Foods</label>
-                                <textarea {...register("favoriteFoods")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" placeholder="Pasta, Chicken, Fruits..." />
+                                <label className="block text-sm font-medium mb-1">Comidas Favoritas</label>
+                                <textarea {...register("favoriteFoods")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" placeholder="Pasta, Pollo, Frutas..." />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Disliked Foods / Allergies</label>
-                                <textarea {...register("dislikedFoods")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" placeholder="Broccoli, Nuts..." />
+                                <label className="block text-sm font-medium mb-1">Alimentos que NO te gustan / Alergias</label>
+                                <textarea {...register("dislikedFoods")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" placeholder="Brócoli, Nueces..." />
                             </div>
                         </motion.div>
                     )}
@@ -161,19 +161,19 @@ export default function AnamnesisWizard() {
                             exit={{ opacity: 0, x: -20 }}
                             className="space-y-4"
                         >
-                            <h2 className="text-2xl font-bold">Final Details</h2>
+                            <h2 className="text-2xl font-bold">Detalles Finales</h2>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Main Goal</label>
+                                <label className="block text-sm font-medium mb-1">Objetivo Principal</label>
                                 <select {...register("goal")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary">
-                                    <option value="lose_weight">Lose Weight</option>
-                                    <option value="gain_muscle">Gain Muscle</option>
-                                    <option value="performance">Improve Performance</option>
-                                    <option value="maintenance">Maintenance</option>
+                                    <option value="lose_weight">Perder Peso</option>
+                                    <option value="gain_muscle">Ganar Músculo</option>
+                                    <option value="performance">Mejorar Rendimiento</option>
+                                    <option value="maintenance">Mantenimiento</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Medical History</label>
-                                <textarea {...register("medicalHistory")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" placeholder="Any injuries, diseases..." />
+                                <label className="block text-sm font-medium mb-1">Historial Médico / Lesiones</label>
+                                <textarea {...register("medicalHistory")} className="w-full p-3 rounded-lg bg-background border border-input focus:ring-2 focus:ring-primary" placeholder="Alguna lesión, enfermedad..." />
                             </div>
                         </motion.div>
                     )}
@@ -186,7 +186,7 @@ export default function AnamnesisWizard() {
                         disabled={currentStep === 1}
                         className={`px-6 py-2 rounded-xl transition-colors ${currentStep === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-muted"}`}
                     >
-                        Back
+                        Atrás
                     </button>
 
                     {currentStep < steps.length ? (
@@ -195,7 +195,7 @@ export default function AnamnesisWizard() {
                             onClick={nextStep}
                             className="bg-primary text-primary-foreground px-6 py-2 rounded-xl flex items-center hover:bg-primary/90 transition-all shadow-lg shadow-primary/25"
                         >
-                            Next <ChevronRight size={18} className="ml-1" />
+                            Siguiente <ChevronRight size={18} className="ml-1" />
                         </button>
                     ) : (
                         <button
@@ -203,7 +203,7 @@ export default function AnamnesisWizard() {
                             disabled={isSubmitting}
                             className="bg-gradient-to-r from-primary to-purple-600 text-white px-8 py-2 rounded-xl flex items-center hover:opacity-90 transition-all shadow-lg shadow-primary/25 disabled:opacity-70"
                         >
-                            {isSubmitting ? "Sending..." : "Complete & Send"} <Check size={18} className="ml-2" />
+                            {isSubmitting ? "Enviando..." : "Completar y Enviar"} <Check size={18} className="ml-2" />
                         </button>
                     )}
                 </div>
